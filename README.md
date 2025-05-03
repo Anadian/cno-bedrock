@@ -13,6 +13,7 @@
 - [Contributing](#Contributing)
 - [License](#License)
 # Background
+# Install
 Available on the [npm registry](https://www.npmjs.com/package/cno-bedrock) as `cno-bedrock`. Add it to a project using [pnpm](https://pnpm.io/cli/add):
 ```sh
 pnpm add --save cno-read-by-block
@@ -25,9 +26,6 @@ import { OneFunction } from 'cno-bedrock'; // To just export a single function.
 ```
 # API
 See [API.md](API.md) for full API. 
-# Install
-# Usage
-# API
 # Contributing
 Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 # License
