@@ -30,8 +30,15 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 
 //# Dependencies
 	//## Internal
+	import deriveOptions from 'cno-options.js';
+	import Time from 'cno-time.js';
 	//## Standard
+	import AssertNS from 'node:assert/strict';
+	import Utility from 'node:util';
 	//## External
+	import _ from 'lodash';
+	import NanoIDNS from 'nanoid';
+
 //# Constants
 const FILENAME = 'lib.js';
 //## Errors
@@ -48,22 +55,154 @@ function returnFalse(){
 function returnNull(){
 	return null;
 }
+function annotateThis(){
+	Object.defineProperties( this, {
+		uid: {
+			value: NanoIDNS.nanoid(),
+			//configurable: false,
+			enumerable: true.
+			//writable: false
+		},
+		created: {
+			value: Time.getNowISO(),
+			enumerable: true
+		},
+		insp: {
+			value: inspThis.bind( this ).
+		}
+	} );
+}
+function inspThis( depth = 1, include_hidden = false ){
+	return Utility.inspect( this, include_hidden, depth );
+}
+/**
+### getAnnotatedObject
+> Adds some basic information, UID and creation time, to an object; useful for debugging.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| input_object | object | The object to add the properties to. \[default: null\] |
+
+#### Returns
+| type | description |
+| --- | --- |
+| object | The freshly-annotated object. |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_INVALID_ARG_TYPE' | TypeError | Thrown if a given argument isn't of the correct type. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function getAnnotatedObject( input_object = null ){
+	// Constants
+	const FUNCTION_NAME = 'getAnnotateObject';
+	// Variables
+	var _return = null;
+	var return_error = null;
+	// Parametre checks
+	if( typeof(input_object) !== 'object' ){
+		return_error = new TypeError('Param "input_object" is not of type object.');
+		return_error.code = 'ERR_INVALID_ARG_TYPE';
+		throw return_error;
+	}
+	// Function
+	_return = Object.assign( {}, input_object );
+	annotateThis.call( _return );
+	// Return
+	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});
+	return _return;
+} // getAnnotatedObject
+
+const ERROR_TYPE = {
+	VALUE: { constructor: Error, message: 'value', code: 'VALUE' },
+	TYPE: { constructor: TypeError, message: 'type', code: 'TYPE' },
+	ASSERT: { constructor: AssertNS.AssertionError, message: 'Assertion:', code: 'ASSERTION' },
+	AGGREGATE: { constructor: AggregateError, message: 'AggregateError: multiple errors ', code: 'AGGREGATE'}
+};
+const FAULT_TYPE = {
+	RETURN: { constructor: Error, message: 'returned an unexpected value', code: 'RETURN' },
+	CATCH: { constructor: Error, message: 'threw an error', code: 'CATCH' },
+	REJECT: { constructor: Error, message: 'rejected with', code: 'REJECTION' },
+	RECEIVE: { constructor: Error, message: 'received error', code: 'RECEIVED' },
+	TIMEOUT: { message: 'process timedout with', code: 'TIMEOUT' },
+	CRASH: { message: 'process crashed wtih', code: 'CRASH' }
+};
+const OPERATOR_TYPE = {
+	EQUAL: { message: 'is equal to', code: '==' },
+	NOTEQUAL: { message: 'is not equal to', code: '!=' },
+	STRICTEQUAL: { message: 'is strictly equal to', code: '===' },
+	NOTSTRICTEQUAL: { message: 'is not strictly equal to', code: '!==' },
+	STRICTLYNOTEQUAL: { message: 'is strictly not equal to', code: '=!=' },
+};
+const VARIABLE_TYPE = {
+	VARIABLE: { message: 'value', code: '' },
+	ARG: { message: 'argument', code: 'ARG' },
+	PROPERTY: { message: 'property', code: 'PROPERTY' },
+	RETURN: { message: 'return', code: 'RETURN' },
+	OBJECT: { message: 'in object', code: 'OBJECT' },
+	ARRAY: { message: 'while interating array', code: 'ARRAY' },
+	FUNCTION: { message: 'function', code: 'FUNCTION' },
+	ASSERT: { message: 'Assertion: ', code: 'ASSERTION' }
+};
+function createError( arg_error_type, arg_variable_type, name, predicate ){
+	var return_error = null;
+	var message = '';
+	var code = 'ERR_';
+	var cause = null;
+	const error_type = ERROR_TYPE[arg_error_type];
+	const variable_type = VARIABLE_TYPE[arg_variable_type];
+	if( arg_error_type === 'ASSERT' ){
+		message += 'Assertion: '+predicate.message;
+		cause = predicate;
+		return_error = new error_type.constructor( { message: message } );
+		return_error.cause = predicate;
+	} else{
+		if( arg_error_type === 'AGGREGATE' && predicate.length > 1 ){
+			message += `AggregateError: Multiple errors ${variable_type.message} '${name}'`;
+			cause = predicate;
+		} else if( arg_error_type === 'VALUE' || arg_error_type === 'TYPE' ){
+			code += 'INVALID_';
+			message += `Error: invalid ${variable_type.message} ${error_type.message}; ${name} ${predicate}`;
+		} else{ // RETURN/CATCH/REJECT/RECEIVE assume name is function and predicate is an error
+			message += `Error: ${name} ${error_type.message}: ${predicate}`;
+			cause = predicate;
+		}
+		return_error = new error_type.constructor( message, { cause: cause } );
+	}
+	code += variable_type.code+'_';
+	code += error_type.code;
+	return_error.code = code;
+	return return_error;
+}
 function strictlyNotEqual_Unsafe( actual, invalid, code = null, name = null, value = null, expectedType = null ){
 	var _return = false;
 	var return_error = null;
+	var error_type = '';
+	var message = '';
 	if( typeof(received) === typeof(invalid) ){
 		if( received == invalid ){
-			return_error = new Error( `Error: invalid value; ${name ?? 'value'} cannot be ${value ?? invalid}` );
-			return_error.code = `ERR_INVALID_${code?code+'_':''}VALUE`;
-			throw return_error;
+			error_type = 'VALUE';
+			message = `cannot be ${value ?? invalid}`; 
+			/*return_error = new Error( `Error: invalid value; ${name ?? 'value'} cannot be ${value ?? invalid}` );
+			return_error.code = `ERR_INVALID_${code?code+'_':''}VALUE`;*/
 		} else{
 			_return = true;
 		}
 	} else{
-		return_error = new TypeError( `Error: ${name ?? 'type'} must be of type '${expectedType ?? typeof(invalid)}'` );
-		return_error.code = `ERR_INVALID_${code?code+'_':''}TYPE`;
-		throw return_error;
+		error_type = 'TYPE';
+		message = `must be of type ${expectedType ?? typeof(invalid)}`;
+		/*return_error = new TypeError( `Error: ${name ?? 'type'} must be of type '${expectedType ?? typeof(invalid)}'` );
+		return_error.code = `ERR_INVALID_${code?code+'_':''}TYPE`;*/
 	}
+	if( error_type != '' ){
+		var assert_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: invalid, operator: 'strictlyNotEqual' } );
+		return_error = createError( error_type, 'ARG', null, assert_error );
 	return _return;
 }
 /**
@@ -126,7 +265,6 @@ function strictlyNotEqual( input_options = {} ){
 	var arguments_array = Array.from(arguments);
 	var _return = null;
 	var return_error = null;
-	var options = {};
 	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `received: ${arguments_array}`});
 	// Parametre checks
 	if( typeof(input_options) !== 'object' ){
@@ -136,7 +274,7 @@ function strictlyNotEqual( input_options = {} ){
 	}
 
 	// Options
-	const { options, log_function, validation_function } = derive.call( this, input_options, DEFAULT_OPTIONS );
+	const { options, log_function, validation_function } = deriveOptions.call( this, input_options, DEFAULT_OPTIONS );
 	if( options.noop !== true ){
 		// Function
 		_return = strictlyNotEqual_Unsafe( options.received, options.invalid, options.code, options.name, options.value, options.expectedType );
@@ -159,38 +297,6 @@ Object.defineProperties( strictlyNotEqual, {
 	}
 } );
 
-// Options
-const STANDARD_OPTIONS = {
-	noop: false,
-	noDefaults: false,
-	noDynamic: false,
-	logFunction: null,
-	validationFunction: null
-};
-function derive( input_options, default_options, dynamic_function = null ){
-	var _return = null;
-	var options = null;
-	if( input_options.noDefaults !== true && default_options != null ){
-		options = Object.assign( {}, STANDARD_OPTIONS, default_options, input_options );
-		if( input_options.noDynamic !== true && typeof(dynamic_function) === 'function' && dynamic_function != null ){
-			options = Object.assign( options, dynamic_function.call( this, options ), input_options );
-		} // noDynamic
-	} else{
-		options = Object.assign( {}, input_options );
-	} // noDefaults
-	_return = { options: options, log_function: options.logFunction ?? this?.logger?.log ?? returnNull, validation_function: validationFunction ?? returnTrue };:
-	return _return;
-}
-Object.defineProperties( derive, {
-	STANDARD_OPTIONS: {
-		value: STANDARD_OPTIONS,
-		properties: {
-			configurable: false,
-			writable: false
-		}
-	}
-} );
-
 // Exports
 const UNSAFE = {
 	strictlyNotEqual: strictlyNotEqual_Unsafe
@@ -198,15 +304,17 @@ const UNSAFE = {
 const NOOP = {
 	returnTrue: returnTrue,
 	returnFalse: returnFalse,
-	returnNull: returnNull
+	returnNull: returnNull,
+	returnUndefined: _.noop
 };
 const NAMESPACE = {
+	_: _,
 	unsafe: UNSAFE,
 	noop: NOOP,
 	strictlyNotEqual: strictlyNotEqual,
-	derive: derive
+	deriveOptions: deriveOptions
 };
-export { NAMESPACE as default, strictlyNotEqual };
+export { NAMESPACE as default, strictlyNotEqual, deriveOptions };
 
 // lib.js EOF
 
