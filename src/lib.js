@@ -30,14 +30,13 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 
 //# Dependencies
 	//## Internal
-	import deriveOptions from 'cno-options.js';
-	import Time from 'cno-time.js';
+	import Time from './cno-time.js';
+	import Utility from './cno-utility.js';
+	import NOOP from './cno-noop.js';
+	import deriveOptions from './cno-options.js';
+	import Assert from './cno-assert.js';
 	//## Standard
-	import AssertNS from 'node:assert/strict';
-	import Utility from 'node:util';
 	//## External
-	import _ from 'lodash';
-	import NanoIDNS from 'nanoid';
 
 //# Constants
 const FILENAME = 'lib.js';
@@ -45,81 +44,9 @@ const FILENAME = 'lib.js';
 
 //# Global Variables
 /**## Functions*/
-// No-op functions.
-function returnTrue(){
-	return true;
-}
-function returnFalse(){
-	return false;
-}
-function returnNull(){
-	return null;
-}
-function annotateThis(){
-	Object.defineProperties( this, {
-		uid: {
-			value: NanoIDNS.nanoid(),
-			//configurable: false,
-			enumerable: true.
-			//writable: false
-		},
-		created: {
-			value: Time.getNowISO(),
-			enumerable: true
-		},
-		insp: {
-			value: inspThis.bind( this ).
-		}
-	} );
-}
-function inspThis( depth = 1, include_hidden = false ){
-	return Utility.inspect( this, include_hidden, depth );
-}
-/**
-### getAnnotatedObject
-> Adds some basic information, UID and creation time, to an object; useful for debugging.
+// Utility functions
 
-#### Parametres
-| name | type | description |
-| --- | --- | --- |
-| input_object | object | The object to add the properties to. \[default: null\] |
-
-#### Returns
-| type | description |
-| --- | --- |
-| object | The freshly-annotated object. |
-
-#### Throws
-| code | type | condition |
-| --- | --- | --- |
-| 'ERR_INVALID_ARG_TYPE' | TypeError | Thrown if a given argument isn't of the correct type. |
-
-#### History
-| version | change |
-| --- | --- |
-| 0.0.1 | WIP |
-*/
-function getAnnotatedObject( input_object = null ){
-	// Constants
-	const FUNCTION_NAME = 'getAnnotateObject';
-	// Variables
-	var _return = null;
-	var return_error = null;
-	// Parametre checks
-	if( typeof(input_object) !== 'object' ){
-		return_error = new TypeError('Param "input_object" is not of type object.');
-		return_error.code = 'ERR_INVALID_ARG_TYPE';
-		throw return_error;
-	}
-	// Function
-	_return = Object.assign( {}, input_object );
-	annotateThis.call( _return );
-	// Return
-	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});
-	return _return;
-} // getAnnotatedObject
-
-const ERROR_TYPE = {
+/*const ERROR_TYPE = {
 	VALUE: { constructor: Error, message: 'value', code: 'VALUE' },
 	TYPE: { constructor: TypeError, message: 'type', code: 'TYPE' },
 	ASSERT: { constructor: AssertNS.AssertionError, message: 'Assertion:', code: 'ASSERTION' },
@@ -179,34 +106,9 @@ function createError( arg_error_type, arg_variable_type, name, predicate ){
 	code += error_type.code;
 	return_error.code = code;
 	return return_error;
-}
-function strictlyNotEqual_Unsafe( actual, invalid, code = null, name = null, value = null, expectedType = null ){
-	var _return = false;
-	var return_error = null;
-	var error_type = '';
-	var message = '';
-	if( typeof(received) === typeof(invalid) ){
-		if( received == invalid ){
-			error_type = 'VALUE';
-			message = `cannot be ${value ?? invalid}`; 
-			/*return_error = new Error( `Error: invalid value; ${name ?? 'value'} cannot be ${value ?? invalid}` );
-			return_error.code = `ERR_INVALID_${code?code+'_':''}VALUE`;*/
-		} else{
-			_return = true;
-		}
-	} else{
-		error_type = 'TYPE';
-		message = `must be of type ${expectedType ?? typeof(invalid)}`;
-		/*return_error = new TypeError( `Error: ${name ?? 'type'} must be of type '${expectedType ?? typeof(invalid)}'` );
-		return_error.code = `ERR_INVALID_${code?code+'_':''}TYPE`;*/
-	}
-	if( error_type != '' ){
-		var assert_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: invalid, operator: 'strictlyNotEqual' } );
-		return_error = createError( error_type, 'ARG', null, assert_error );
-	return _return;
-}
+}*/
 /**
-### strictlyNotEqual
+### isStrictlyNotEqual
 > Returns `true` if the a give property `received` is the same type but not the same value as `invalid`.
 
 #### Parametres
@@ -249,8 +151,8 @@ function strictlyNotEqual_Unsafe( actual, invalid, code = null, name = null, val
 | --- | --- |
 | 0.0.1 | WIP |
 */
-function strictlyNotEqual( input_options = {} ){
-	const FUNCTION_NAME = 'strictlyNotEqual';
+function isStrictlyNotEqual( input_options = {} ){
+	const FUNCTION_NAME = 'isStrictlyNotEqual';
 	const DEFAULT_OPTIONS = {
 		noop: false, // Skip primary functionality.
 		noDefaults: false, // Don't apply static default options.
@@ -260,12 +162,13 @@ function strictlyNotEqual( input_options = {} ){
 		code: null, // The sort of variable/property being checked, used to give more descriptive error messages; should be either 'ARG', 'PROPERTY', or 'RETURN'.
 		name: null, // The name of the variable/property being checked, used to give more descriptive error messages; dynamically defaults to either 'value' or 'type' depending on which part of operation failed.
 		value: null, // A string representation of `invalid`, used to give more descriptive error messages; dynamically defaults to `invalid` if not specified.
-		expectedType: null // A string representation of the type expected, used to give more descriptive error messages; dynamically defaults to `typeof(invalid)` if not specified.
+		expectedType: null, // A string representation of the type expected, used to give more descriptive error messages; dynamically defaults to `typeof(invalid)` if not specified.
+		errorCallback: returnUndefined
 	};// Variables
-	var arguments_array = Array.from(arguments);
-	var _return = null;
+	//var arguments_array = Array.from(arguments);
+	var _return = false;
 	var return_error = null;
-	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `received: ${arguments_array}`});
+	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `received.`});
 	// Parametre checks
 	if( typeof(input_options) !== 'object' ){
 		return_error = new TypeError('Param "input_options" is not of type object.');
@@ -277,13 +180,19 @@ function strictlyNotEqual( input_options = {} ){
 	const { options, log_function, validation_function } = deriveOptions.call( this, input_options, DEFAULT_OPTIONS );
 	if( options.noop !== true ){
 		// Function
-		_return = strictlyNotEqual_Unsafe( options.received, options.invalid, options.code, options.name, options.value, options.expectedType );
+		try{
+			Assert.assertStrictlyNotEqual( options.received, options.invalid, options.name, options.value, options.expectedType );
+			_return = true;
+		} catch( error ){
+			options.errorCallback( error );
+			_return = false;
+		}
 	} // noop
 	// Return
 	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});
 	return _return;
-} // strictlyNotEqual
-Object.defineProperties( strictlyNotEqual, {
+} // isStrictlyNotEqual
+/*Object.defineProperties( strictlyNotEqual, {
 	ERROR_CODE_TYPES_ENUM: {
 		value: {
 			ARG: 'ARG',
@@ -295,26 +204,44 @@ Object.defineProperties( strictlyNotEqual, {
 			writable: false
 		}
 	}
-} );
+} );*/
 
 // Exports
-const UNSAFE = {
-	strictlyNotEqual: strictlyNotEqual_Unsafe
-};
-const NOOP = {
-	returnTrue: returnTrue,
-	returnFalse: returnFalse,
-	returnNull: returnNull,
-	returnUndefined: _.noop
-};
-const NAMESPACE = {
-	_: _,
-	unsafe: UNSAFE,
-	noop: NOOP,
-	strictlyNotEqual: strictlyNotEqual,
-	deriveOptions: deriveOptions
-};
-export { NAMESPACE as default, strictlyNotEqual, deriveOptions };
+
+const NAMESPACE = {};
+Object.defineProperties( NAMESPACE, {
+	time: {
+		value: Time,
+		enumerable: true
+	},
+	utility: {
+		value: Utility,
+		enumerable: true
+	},
+	noop: {
+		value: NOOP,
+		enumerable: true
+	},
+	assert: {
+		value: Assert,
+		enumerable: true
+	},
+	deriveOptions: {
+		value: deriveOptions,
+		enumerable: true
+	},
+	isStrictlyNotEqual: {
+		value: isStrictlyNotEqual,
+		enumerable: true
+	}
+} );
+
+export { NAMESPACE as default, isStrictlyNotEqual };
+export * from './cno-time.js';
+export * from './cno-utility.js';
+export * from './cno-noop.js';
+export * from './cno-options.js';
+export * from './cno-assert.js';
 
 // lib.js EOF
 

@@ -30,10 +30,10 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 
 //# Dependencies
 	//## Internal
-	import deriveOptions from 'cno-options.js';
+	import deriveOptions from './cno-options.js';
 	//## Standard
 	//## External
-	import MathJS from 'mathjs';
+	//import MathJS from 'mathjs';
 //# Constants
 const FILENAME = 'cno-time.js';
 /* const DURATION_UNITS = {
