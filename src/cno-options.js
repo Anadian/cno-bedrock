@@ -44,7 +44,7 @@ function deriveOptions( input_options, default_options, dynamic_function = null,
 	var _return = null;
 	var options = {};
 	if( standard_options !== false ){
-		options = Object.assign( options, STANDARD_OPTIONS, input_options );
+		options = Object.assign( options, deriveOptions.STANDARD_OPTIONS, input_options );
 	}
 	if( input_options.noDefaults !== true && default_options != null ){
 		options = Object.assign( options, default_options, input_options );

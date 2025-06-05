@@ -30,7 +30,7 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 
 //# Dependencies
 	//## Internal
-	import Utility from './cno-utility.js'
+	import { annotateThis } from './cno-utility.js'
 	//## Standard
 	import AssertNS from 'node:assert/strict';
 	//## External
@@ -44,7 +44,7 @@ const FILENAME = 'cno-assert.js';
 function assertSameType( actual, expected, message = ''){
 	var return_error = null;
 	if( typeof(actual) !== typeof(expected) ){
-		mesage ??= `Type of 'actual' (${typeof(actual)}) is not the same type as 'expected' (${typeof(expected)}).`;
+		message ??= `Type of 'actual' (${typeof(actual)}) is not the same type as 'expected' (${typeof(expected)}).`;
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'SameType' } );
 		return_error.code += '_SAMETYPE';
 		annotateThis.call( return_error );
@@ -86,13 +86,12 @@ function assertStrictlyNotEqual( actual, invalid, name = null, value = null, exp
 }
 function assertInstanceof( actual, expected, variable_name = '', constructor_name = '', message = '' ){
 	var return_error = null;
-	if( !( actual instanceof expected_constructor ) ){
+	if( !( actual instanceof expected ) ){
 		message ??= `${variable_name ?? 'Actual'} is not an instance of ${constructor_name ?? 'expected'}.`;
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'Instanceof' } );
 		return_error.code += '_INSTANCEOF';
 		annotateThis.call( return_error );
-		throw return_error;
-	}
+		throw return_error	}
 }
 function assertExpectedError( actual_error, expected_object, message = '' ){
 	var return_error = null;
@@ -119,7 +118,7 @@ function assertObjectsQuantitativelyEqual( actual, expected, message = '' ){
 	var return_error = null;
 	if( !_.isEqual( actual, expected ) ){
 		message ??= `'actual' object (${inspThis.call( actual )}) doesn't strictly match 'expected' object (${inspThis.call( expected )}).`;
-		return_error = AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'ObjectsQuantitativelyEqual' } );
+		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'ObjectsQuantitativelyEqual' } );
 		return_error.code += '_OBJECTSQUANTITAIVELYEQUAL';
 		annotateThis.call( return_error );
 		throw return_error;

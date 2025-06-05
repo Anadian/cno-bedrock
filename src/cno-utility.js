@@ -30,7 +30,7 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 
 //# Dependencies
 	//## Internal
-	import getNowISO from './cno-time.js';
+	import { getNowISO } from './cno-time.js';
 	//## Standard
 	import { inspect } from 'node:util';
 	//## External

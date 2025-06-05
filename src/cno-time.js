@@ -136,6 +136,16 @@ function Clock( input_options = {} ){
 	if( validation_function( options ) === true ){
 		if( options.noop !== true ){
 			// Function
+			Object.defineProperties( this, {
+				getFunction: {
+					value: options.getFunction,
+					enumerable: true
+				},
+				granularity: {
+					value: options.granularity,
+					enumerable: true
+				}
+			} );
 		} // noop
 	} // validation_function
 	// Return
@@ -145,16 +155,16 @@ function Clock( input_options = {} ){
 
 // Benmark
 function Benchmark( options = null ){
-	if( !(this instanceof Benchmark) ){
+	if( !new.target ){
 		return new Benchmark( options );
 	}
-	this.clock ??= options.clock ?? new Clock();
-	this.now ??= options.now ?? this.clock.getFunction;
-	this.granularity ??= options.granularity ?? this.clock.granularity;
-	this.marks ??= options.marks ?? 0;
-	this.intervals ??= options.intervals ?? 0;
-	this.markArray ??= options.mark_array ?? [];
-	this.duration ??= options.duration ?? 0;
+	this.clock ??= options?.clock ?? new Clock();
+	this.now ??= options?.now ?? this.clock.getFunction;
+	this.granularity ??= options?.granularity ?? this.clock.granularity;
+	this.marks ??= options?.marks ?? 0;
+	this.intervals ??= options?.intervals ?? 0;
+	this.markArray ??= options?.mark_array ?? [];
+	this.duration ??= options?.duration ?? 0;
 	return this;
 }
 Benchmark.prototype.begin = function(){
