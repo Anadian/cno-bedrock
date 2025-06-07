@@ -33,7 +33,7 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 	import deriveOptions from './cno-options.js';
 	//## Standard
 	//## External
-	//import MathJS from 'mathjs';
+	import * as MathJS from 'mathjs';
 //# Constants
 const FILENAME = 'cno-time.js';
 /* const DURATION_UNITS = {
@@ -132,7 +132,7 @@ function Clock( input_options = {} ){
 	}
 
 	// Options
-	var { options, log_function = this?.logger?.log, validation_function } = deriveOptions( input_options, DEFAULT_OPTIONS );
+	var { logFunction: log_function = this?.logger?.log, validationFunction: validation_function, ...options } = deriveOptions( input_options, DEFAULT_OPTIONS );
 	if( validation_function( options ) === true ){
 		if( options.noop !== true ){
 			// Function
@@ -224,17 +224,18 @@ Benchmark.prototype.getIntervals = function(){
 | 0.0.1 | WIP |
 */
 function getStringFromDurationOptions( input_options = {} ){
-
 	const FUNCTION_NAME = 'getStringFromDurationOptions';
 	const DEFAULT_OPTIONS = {
 		duration: Number.NaN, // The duration; assumed to be in seconds unless `base` is specified.
 		seconds_per_unit: 1, // The base of scale for `duration`; for example: `1` mean duration is specified in seconds, `0.001` means duration is in milliseconds, `60` means duration is in minutes.
 		units_per_second: 1, // The inverse of `seconds_per_unit` which can also be used to derive `seconds_per_unit` via taking the reciprocal (1/`units_per_second`); ignored if `seconds_per_unit` is specified.
-		units: "\u205f", // A string to place between a number and its unit or a non-truthy value to omit units entirely from the formatted string.
-		separator: "\u2005", // A string to put between each order of magnitude or a non-truthy value to omit separation altogether.
+		unit_separator: "\u205f", // A string to place between a number and its unit or a non-truthy value to omit units entirely from the formatted string.
+		split_separator: "\u2005", // A string to put between each order of magnitude or a non-truthy value to omit separation altogether.
 		applied_units: { hours: 'h', minutes: 'min', seconds: 's' }, // An object whose properties indicate which units should be included with the property value indicating a preferred unit symbol. See [MathJS](https://mathjs.org/docs/datatypes/units.html#reference) for available units.
+		duration_unit: MathJS.unit('s'),
+		split_units: [ 'h', 'min', 's' ]
 	};// Variables
-	var _return = null;
+	var _return = '';
 	var return_error = null;
 	var options = {};
 	// Parametre checks
@@ -245,18 +246,42 @@ function getStringFromDurationOptions( input_options = {} ){
 	}
 
 	// Options
-	var { options, log_function = this?.logger?.log, validation_function } = deriveOptions( input_options, DEFAULT_OPTIONS, ( options ) => {
+	var { logFunction: log_function = this?.logger?.log, validationFunction: validation_function, ...options } = deriveOptions( input_options, DEFAULT_OPTIONS, ( options ) => {
+		/* c8 ignore start */
 		if( !Number.isFinite( options.seconds_per_unit ) ){
 			if( Number.isFinite( options.units_per_second ) ){
 				options.seconds_per_unit = 1/options.units_per_second;
 			}
-		}
+		} /* c8 ignore stop */
 		return options;
 	} );
 	if( validation_function( options ) === true ){
 		if( options.noop !== true ){
 			// Function
-			var working_duration = options.duration * options.seconds_per_unit;
+			var working_duration_unit = MathJS.unit( options.duration, options.duration_unit );
+			var split_array = working_duration_unit.splitUnit( options.split_units );
+			var output_array = [];
+			for( var part_unit of split_array ){
+				var part_string = part_unit.toString();
+				//console.log( part_string );
+				if( options.unit_separator ){
+					//console.log( 'unit_separator truthy' );
+					part_string = part_string.replace( ' ', options.unit_separator );
+				}
+				//console.log( "Fixed? part_string: %s", part_string );
+				output_array.push( part_string );
+			}
+			if( options.split_separator ){
+				_return = output_array.join( options.split_separator );
+			} else /* c8 ignore start */ {
+				_return = output_array.join('');
+			} /* c8 ignore stop */
+			/*var sorted_units = [];
+			for( const unit_key of Object.keys(options.applied_units) ){
+				var unit_value = MathJS.unit(1, unit_key);
+				unit_value.to('s');
+			}*/
+
 		} // noop
 	} // validation_function
 	// Return
@@ -394,14 +419,35 @@ Duration.createFromObject
 function getAnnotatedStringFromDuration( duration_s = 0 ){
 	*/
 
-const NAMESPACE = {
-	getNowISO: getNowISO,
-	getDateFromUnixTimestamp: getDateFromUnixTimestamp,
-	getISOStringFromUnixTimestamp: getISOStringFromUnixTimestamp,
-	Benchmark: Benchmark
-};
+const NAMESPACE = {};
+Object.defineProperties( NAMESPACE, {
+	getNowISO: {
+		value: getNowISO,
+		enumerable: true
+	},
+	getDateFromUnixTimestamp: {
+		value: getDateFromUnixTimestamp,
+		enumerable: true
+	},
+	getISOStringFromUnixTimestamp: {
+		value: getISOStringFromUnixTimestamp,
+		enumerable: true
+	},
+	Clock: {
+		value: Clock,
+		enumerable: true
+	},
+	Benchmark: {
+		value: Benchmark,
+		enumerable: true
+	},
+	getStringFromDurationOptions: {
+		value: getStringFromDurationOptions,
+		enumerable: true
+	}
+} );
 
-export { NAMESPACE as default, getNowISO, getDateFromUnixTimestamp, getISOStringFromUnixTimestamp, Benchmark };
+export { NAMESPACE as default, getNowISO, getDateFromUnixTimestamp, getISOStringFromUnixTimestamp, Clock, Benchmark, getStringFromDurationOptions };
 
 // lib.js EOF
 

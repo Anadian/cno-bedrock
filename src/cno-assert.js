@@ -91,7 +91,8 @@ function assertInstanceof( actual, expected, variable_name = '', constructor_nam
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'Instanceof' } );
 		return_error.code += '_INSTANCEOF';
 		annotateThis.call( return_error );
-		throw return_error	}
+		throw return_error;
+	}
 }
 function assertExpectedError( actual_error, expected_object, message = '' ){
 	var return_error = null;

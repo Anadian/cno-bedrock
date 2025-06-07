@@ -54,7 +54,7 @@ function deriveOptions( input_options, default_options, dynamic_function = null,
 	} else{
 		options = Object.assign( {}, input_options );
 	} // noDefaults
-	_return = { options: options, log_function: options.logFunction ?? this?.logger?.log ?? returnNull, validation_function: options.validationFunction ?? returnTrue };
+	_return = options;
 	return _return;
 }
 Object.defineProperties( deriveOptions, {

@@ -42,7 +42,7 @@ const FILENAME = 'lib.test.js';
 /**## Functions*/
 function main_test(){
 	console.log( 'Testing starting at %s', Bedrock.time.getNowISO() );
-	var benchmark = Bedrock.time.Benchmark();
+	var benchmark = Bedrock.time.Benchmark( { clock: Bedrock.time.Clock() } );
 	Bedrock.utility.annotateThis.call( benchmark );
 	benchmark.begin();
 	Bedrock.assert.deepStrictEqual( Bedrock.noop.returnNull(), null );
@@ -70,10 +70,15 @@ function main_test(){
 	} catch( error ){
 		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_STRICTLYNOTEQUAL' } );
 	}
-	benchmark.mark();
-	Bedrock.assert.assertInstanceof( new Error(), Error );
 	try{
-		Bedrock.assert.assertInstanceof( new TypeError(), Error );
+		Bedrock.assert.assertStrictlyNotEqual( 1, false );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_STRICTLYNOTEQUAL' } );
+	}
+	benchmark.mark();
+	Bedrock.assert.assertInstanceof( new TypeError(), Error ); // TypeError is an instance of Error
+	try{
+		Bedrock.assert.assertInstanceof( new Error(), TypeError );
 	} catch( error ){
 		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_INSTANCEOF' } );
 	}
@@ -86,8 +91,15 @@ function main_test(){
 	}
 	benchmark.mark();
 	try{
-		var error = new TypeError();
+		var error = new Error();
 		error.code = 'NONE';
+		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'NONE' } );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_EXPECTEDERROR' } );
+	}
+	try{
+		error = new Error();
+		error.code = 'WRONG';
 		Bedrock.assert.assertExpectedError( error, { constructor: Error, code: 'NONE' } );
 	} catch( error ){
 		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_EXPECTEDERROR' } );
@@ -96,6 +108,47 @@ function main_test(){
 	console.log( benchmark.getIntervals() );
 	console.log( 'Benchmark end: %s', Bedrock.time.getISOStringFromUnixTimestamp( Number(benchmark.duration) * benchmark.granularity ) );
 	console.log( Bedrock.utility.inspThis.call( benchmark ) );
+	// Improving coverage
+	try{
+		Bedrock.isStrictlyNotEqual( false );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'ERR_INVALID_ARG_TYPE' } );
+	}
+	Bedrock.assert.deepStrictEqual( Bedrock.isStrictlyNotEqual( { received: 1, invalid: 0 } ), true );
+	Bedrock.assert.deepStrictEqual( Bedrock.isStrictlyNotEqual( { received: 0, invalid: 0 } ), false );
+	var current_options = { a: 0 };
+	var default_options = { a: 1 };
+	var dynamic_function = ( options ) => {
+		options.a = 5;
+		return options;
+	};
+	Bedrock.assert.assertObjectsQuantitativelyEqual( Bedrock.deriveOptions( current_options, default_options, dynamic_function, false ), { a: 0 } );
+	current_options = { noDefaults: true };
+	Bedrock.assert.assertObjectsQuantitativelyEqual( Bedrock.deriveOptions( current_options, null ), { noDefaults: true } );
+	try{
+		Bedrock.utility.getAnnotatedObject( false );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'ERR_INVALID_ARG_TYPE' } );
+	}
+	var annotated_object = Bedrock.utility.getAnnotatedObject( current_options );
+	Bedrock.assert.assertObjectsQuantitativelyEqual( current_options, { noDefaults: true } );
+	Bedrock.assert.deepStrictEqual( Bedrock.time.getStringFromDurationOptions( { duration: 109210 } ), "30\u205fh\u200520\u205fmin\u200510\u205fs" );
+	try{
+		Bedrock.time.getStringFromDurationOptions( false );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'ERR_INVALID_ARG_TYPE' } );
+	}
+	//var new_benchmark = Bedrock.time.Benchmark( { clock: Bedrock.time.Clock() } );
+	try{
+		Bedrock.time.Clock( false );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'ERR_INVALID_ARG_TYPE' } );
+	}
+	try{
+		Bedrock.time.Benchmark( false );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'ERR_INVALID_ARG_TYPE' } );
+	}
 }
 main_test();
 

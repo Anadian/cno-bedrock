@@ -163,7 +163,7 @@ function isStrictlyNotEqual( input_options = {} ){
 		name: null, // The name of the variable/property being checked, used to give more descriptive error messages; dynamically defaults to either 'value' or 'type' depending on which part of operation failed.
 		value: null, // A string representation of `invalid`, used to give more descriptive error messages; dynamically defaults to `invalid` if not specified.
 		expectedType: null, // A string representation of the type expected, used to give more descriptive error messages; dynamically defaults to `typeof(invalid)` if not specified.
-		errorCallback: returnUndefined
+		errorCallback: NOOP.returnUndefined
 	};// Variables
 	//var arguments_array = Array.from(arguments);
 	var _return = false;
@@ -177,7 +177,7 @@ function isStrictlyNotEqual( input_options = {} ){
 	}
 
 	// Options
-	const { options, log_function, validation_function } = deriveOptions.call( this, input_options, DEFAULT_OPTIONS );
+	const { logFunction: log_function = this?.logger?.log, validationFunction: validation_function, ...options } = deriveOptions.call( this, input_options, DEFAULT_OPTIONS );
 	if( options.noop !== true ){
 		// Function
 		try{
