@@ -41,6 +41,15 @@ const FILENAME = 'cno-utility.js';
 
 //# Global Variables
 /**## Functions*/
+/**
+### annotateThis
+> Adds some basic information, UID and creation time, to `this`, useful for debugging.
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function annotateThis(){
 	Object.defineProperties( this, {
 		uid: {
@@ -58,13 +67,27 @@ function annotateThis(){
 		}
 	} );
 }
+/**
+### inspThis
+> [Inspects](https://nodejs.org/api/util.html#utilinspectobject-options) `this` with some more concise defaults.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| options | object | Overwrite options to pass to inspect. \[default: null\] |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function inspThis( options = null ){
 	options ??= { depth: 1, maxArrayLength: 16, maxStringLength: 64 };
 	return inspect( this, options );
 }
 /**
 ### getAnnotatedObject
-> Adds some basic information, UID and creation time, to an object; useful for debugging.
+> [`annotateThis`](#annotateThis) but modifies and returns a copy of the given input object.
 
 #### Parametres
 | name | type | description |

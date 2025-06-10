@@ -71,14 +71,66 @@ const FILENAME = 'cno-time.js';
 
 //# Global Variables
 /**## Functions*/
+/**
+### getNowISO
+> Returns 'now' as an ISO 8601 string.
+
+#### Returns
+| type | description |
+| --- | --- |
+| string | The ISO8601/RFC3339-formatted string. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function getNowISO(){
 	var _return = new Date();
 	return _return.toISOString();
-}
+} // getNowISO
+/**
+### getDateFromUnixTimestamp
+> Returns a new [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) from a Unix-style millisecond timestamp.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| unix_timestamp | number | Timestamp in milliseconds.  |
+
+#### Returns
+| type | description |
+| --- | --- |
+| Date | The new Date object. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function getDateFromUnixTimestamp( unix_timestamp ){
 	var _return = new Date( unix_timestamp * 1000 );
 	return _return;
-}
+} // getDateFromUnixTimestamp
+/**
+### getISOStringFromUnixTimestamp
+> Returns an ISO string from a Unix-style millisecond timestamp.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| unix_timestamp | number | Timestamp in milliseconds.  |
+
+#### Returns
+| type | description |
+| --- | --- |
+| string | The ISO8601/RFC3339 string. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function getISOStringFromUnixTimestamp( unix_timestamp ){
 	return getDateFromUnixTimestamp( unix_timestamp ).toISOString();
 }

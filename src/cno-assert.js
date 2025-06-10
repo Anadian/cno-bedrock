@@ -41,8 +41,33 @@ const FILENAME = 'cno-assert.js';
 
 //# Global Variables
 /**## Functions*/
-function assertSameType( actual, expected, message = ''){
+/**
+### assertSameType
+> Throws if actual's type is not the same as expected's, according to a strict `typeof` comparison.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+| expected | any | The expected value.  |
+| message | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_SAMETYPE' | AssertionError | Thrown if `typeof(actual) !== typeof(expected)`. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function assertSameType( actual, expected, message = '' ){
+	// Constants
+	const FUNCTION_NAME = 'assertSameType';
+	// Variables
 	var return_error = null;
+	// Function
 	if( typeof(actual) !== typeof(expected) ){
 		message ??= `Type of 'actual' (${typeof(actual)}) is not the same type as 'expected' (${typeof(expected)}).`;
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'SameType' } );
@@ -50,9 +75,34 @@ function assertSameType( actual, expected, message = ''){
 		annotateThis.call( return_error );
 		throw return_error;
 	}
-}
-function assertNonstrictNotEqual( actual, expected, message = '' ){
+} // assertSameType
+/**
+### assertNonstrictNotEqual
+> Throws if actual and expected can be coerced to equal one another.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+| expected | any | The expected value.  |
+| message, | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_NONSTRICTNOTEQUAL' | AssertionError | Thrown if `actual == expected`. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function assertNonstrictNotEqual( actual, expected, message, = '' ){
+	// Constants
+	const FUNCTION_NAME = 'assertNonstrictNotEqual';
+	// Variables
 	var return_error = null;
+	// Function
 	if( actual == expected ){
 		message ??= `Value of 'actual' (${actual}) is equal to 'expected' (${expected}).`;
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'NonstrictNotEqual' } );
@@ -60,10 +110,38 @@ function assertNonstrictNotEqual( actual, expected, message = '' ){
 		annotateThis.call( return_error );
 		throw return_error;
 	}
-}
-function assertStrictlyNotEqual( actual, invalid, name = null, value = null, expectedType = null, message = '' ){
+} // assertNonstrictNotEqual
+/**
+### assertStrictlyNotEqual
+> Throws if actual is not the same type as expected or is the value as expected.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+| expected | any | The expected value.  |
+| name | string | The name of variable as a string, for a more informative auto message. \[default: ''\] |
+| value | string | The expected value as a string, for a more informative auto message. \[default: ''\] |
+| expectedType | string | The expected's type as a string, for a more informative auto message. \[default: ''\] |
+| message | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_STRICTLYNOTEQUAL' | AssertionError | Thrown if actual is not strictly-not-equal (`=!=`) to expected. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function assertStrictlyNotEqual( actual, expected, name = '', value = '', expectedType = '', message = '' ){
+	// Constants
+	const FUNCTION_NAME = 'assertStrictlyNotEqual';
+	// Variables
 	var return_error = null;
 	var cause_error = null;
+	// Function
 	try{
 		assertSameType( actual, invalid );
 		try{
@@ -83,9 +161,34 @@ function assertStrictlyNotEqual( actual, invalid, name = null, value = null, exp
 		annotateThis.call( return_error );
 		throw return_error;
 	}
-}
-function assertInstanceof( actual, expected, variable_name = '', constructor_name = '', message = '' ){
+} // assertStrictlyNotEqual
+/**
+### assertInstanceof
+> Throws if actual is not an instance of (via `instanceof`) of expected.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+| expected | any | The expected value.  |
+| message | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_INSTANCEOF' | AssertionError | Thrown if actual is not an instance of expected. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function assertInstanceof( actual, expected, message = '' ){
+	// Constants
+	const FUNCTION_NAME = 'assertInstanceof';
+	// Variables
 	var return_error = null;
+	// Function
 	if( !( actual instanceof expected ) ){
 		message ??= `${variable_name ?? 'Actual'} is not an instance of ${constructor_name ?? 'expected'}.`;
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'Instanceof' } );
@@ -93,14 +196,39 @@ function assertInstanceof( actual, expected, variable_name = '', constructor_nam
 		annotateThis.call( return_error );
 		throw return_error;
 	}
-}
-function assertExpectedError( actual_error, expected_object, message = '' ){
+} // assertInstanceof
+/**
+### assertExpectedError
+> Throws if the actual error doesn't match the the object describe in expected.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual error.  |
+| expected | any | An object with a the properties 'constructor' with the constructor function used to create the error and 'code' the expected code property of the error.  |
+| message | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_EXPECTEDERROR' | AssertionError | Thrown if actual doesn't match the error described by expected. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function assertExpectedError( actual, expected, message = '' ){
+	// Constants
+	const FUNCTION_NAME = 'assertExpectedError';
+	// Variables
 	var return_error = null;
 	var cause_error = null;
+	// Function
 	try{
-		assertInstanceof( actual_error, expected_object.constructor, 'Error \'actual\' ', expected_object.constructor_string ?? 'expected_object.constructor' );
+		assertInstanceof( actual, expected.constructor, 'Error \'actual\' ', expected.constructor_string ?? 'expected.constructor' );
 		try{
-			AssertNS.strictEqual( actual_error.code, expected_object.code );
+			AssertNS.strictEqual( actual.code, expected.code );
 		} catch( error ){
 			cause_error = error;
 		}
@@ -108,15 +236,41 @@ function assertExpectedError( actual_error, expected_object, message = '' ){
 		cause_error = error;
 	}
 	if( cause_error ){
-		return_error = new AssertNS.AssertionError( { message: `'actual_error' didn't match the error specified by the 'expected_object'. Cause: ${cause_error.message}`, actual: actual_error, expected: expected_object, operator: 'ExpectedError' } );
+		return_error = new AssertNS.AssertionError( { message: `'actual' didn't match the error specified by the 'expected'. Cause: ${cause_error.message}`, actual: actual, expected: expected, operator: 'ExpectedError' } );
 		return_error.code += '_EXPECTEDERROR';
 		return_error.cause = cause_error;
 		annotateThis.call( return_error );
 		throw return_error;
 	}
-}
+} // assertExpectedError
+/**
+### assertObjectsQuantitativelyEqual
+> Throws if acutal doesn't have the same properties and values as expected. Compared via [lodash's `_.isEqual`](https://lodash.com/docs/4.17.15#isEqual).
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual object.  |
+| expected | any | The expected object.  |
+| message | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_OBJECTSQUANTITATIVELYEQUAL' | AssertionError | Thrown if `_.isEqual( actual, expected )` is not true. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function assertObjectsQuantitativelyEqual( actual, expected, message = '' ){
+
+	// Constants
+	const FUNCTION_NAME = 'assertObjectsQuantitativelyEqual';
+	// Variables
 	var return_error = null;
+	// Function
 	if( !_.isEqual( actual, expected ) ){
 		message ??= `'actual' object (${inspThis.call( actual )}) doesn't strictly match 'expected' object (${inspThis.call( expected )}).`;
 		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'ObjectsQuantitativelyEqual' } );
@@ -124,7 +278,7 @@ function assertObjectsQuantitativelyEqual( actual, expected, message = '' ){
 		annotateThis.call( return_error );
 		throw return_error;
 	}
-}
+} // assertObjectsQuantitativelyEqual
 
 const NAMESPACE = { ...AssertNS };
 Object.defineProperties( NAMESPACE, {

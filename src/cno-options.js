@@ -40,6 +40,38 @@ const FILENAME = 'cno-options.js';
 //# Global Variables
 /**## Functions*/
 // Options
+/**
+### deriveOptions
+> Derives and returns the final runtime options.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| input_options | object | Run-time options.  |
+| default_options | object | The default options to be derived against.  |
+| dynamic_function | function | A function which receives an options object as an argument and returns a modified options object; used for dynamic defaults derived from other options. \[default: null\] |
+| standard_options | boolean | Whether to include the defaults for the standard options \(see below\). \[default: true\] |
+
+##### Stanard Options
+> Available via `deriveOptions.STANDARD_OPTIONS`.
+| name | type | default | description |
+| --- | --- | --- | --- |
+| noop | boolean | false | Skip primary functionality. |
+| noDefaults | boolean | false | Don't apply static default options. |
+| noDynamic | boolean | false | Don't apply dynamic default options. |
+| logFunction | function | [returnNull](#returnNull) | A function to use for logging. \[Default: [returnNULL](#returnNull)\] |
+| validationFunction | function | [returnTrue](#returnTrue) | A function for validating the contents of the final options, returning `true` meaning things proceed. \[Default: [returnTrue](#returnTrue)\] |
+
+#### Returns
+| type | description |
+| --- | --- |
+| object | Returns the final options object. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
 function deriveOptions( input_options, default_options, dynamic_function = null, standard_options = true ){
 	var _return = null;
 	var options = {};
@@ -56,7 +88,7 @@ function deriveOptions( input_options, default_options, dynamic_function = null,
 	} // noDefaults
 	_return = options;
 	return _return;
-}
+} // deriveOptions
 Object.defineProperties( deriveOptions, {
 	STANDARD_OPTIONS: {
 		value: {
