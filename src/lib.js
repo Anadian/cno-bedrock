@@ -46,67 +46,6 @@ const FILENAME = 'lib.js';
 /**## Functions*/
 // Utility functions
 
-/*const ERROR_TYPE = {
-	VALUE: { constructor: Error, message: 'value', code: 'VALUE' },
-	TYPE: { constructor: TypeError, message: 'type', code: 'TYPE' },
-	ASSERT: { constructor: AssertNS.AssertionError, message: 'Assertion:', code: 'ASSERTION' },
-	AGGREGATE: { constructor: AggregateError, message: 'AggregateError: multiple errors ', code: 'AGGREGATE'}
-};
-const FAULT_TYPE = {
-	RETURN: { constructor: Error, message: 'returned an unexpected value', code: 'RETURN' },
-	CATCH: { constructor: Error, message: 'threw an error', code: 'CATCH' },
-	REJECT: { constructor: Error, message: 'rejected with', code: 'REJECTION' },
-	RECEIVE: { constructor: Error, message: 'received error', code: 'RECEIVED' },
-	TIMEOUT: { message: 'process timedout with', code: 'TIMEOUT' },
-	CRASH: { message: 'process crashed wtih', code: 'CRASH' }
-};
-const OPERATOR_TYPE = {
-	EQUAL: { message: 'is equal to', code: '==' },
-	NOTEQUAL: { message: 'is not equal to', code: '!=' },
-	STRICTEQUAL: { message: 'is strictly equal to', code: '===' },
-	NOTSTRICTEQUAL: { message: 'is not strictly equal to', code: '!==' },
-	STRICTLYNOTEQUAL: { message: 'is strictly not equal to', code: '=!=' },
-};
-const VARIABLE_TYPE = {
-	VARIABLE: { message: 'value', code: '' },
-	ARG: { message: 'argument', code: 'ARG' },
-	PROPERTY: { message: 'property', code: 'PROPERTY' },
-	RETURN: { message: 'return', code: 'RETURN' },
-	OBJECT: { message: 'in object', code: 'OBJECT' },
-	ARRAY: { message: 'while interating array', code: 'ARRAY' },
-	FUNCTION: { message: 'function', code: 'FUNCTION' },
-	ASSERT: { message: 'Assertion: ', code: 'ASSERTION' }
-};
-function createError( arg_error_type, arg_variable_type, name, predicate ){
-	var return_error = null;
-	var message = '';
-	var code = 'ERR_';
-	var cause = null;
-	const error_type = ERROR_TYPE[arg_error_type];
-	const variable_type = VARIABLE_TYPE[arg_variable_type];
-	if( arg_error_type === 'ASSERT' ){
-		message += 'Assertion: '+predicate.message;
-		cause = predicate;
-		return_error = new error_type.constructor( { message: message } );
-		return_error.cause = predicate;
-	} else{
-		if( arg_error_type === 'AGGREGATE' && predicate.length > 1 ){
-			message += `AggregateError: Multiple errors ${variable_type.message} '${name}'`;
-			cause = predicate;
-		} else if( arg_error_type === 'VALUE' || arg_error_type === 'TYPE' ){
-			code += 'INVALID_';
-			message += `Error: invalid ${variable_type.message} ${error_type.message}; ${name} ${predicate}`;
-		} else{ // RETURN/CATCH/REJECT/RECEIVE assume name is function and predicate is an error
-			message += `Error: ${name} ${error_type.message}: ${predicate}`;
-			cause = predicate;
-		}
-		return_error = new error_type.constructor( message, { cause: cause } );
-	}
-	code += variable_type.code+'_';
-	code += error_type.code;
-	return_error.code = code;
-	return return_error;
-}*/
 /**
 ### isStrictlyNotEqual
 > Returns `true` if the a give property `received` is the same type but not the same value as `invalid`.
@@ -192,19 +131,6 @@ function isStrictlyNotEqual( input_options = {} ){
 	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});
 	return _return;
 } // isStrictlyNotEqual
-/*Object.defineProperties( strictlyNotEqual, {
-	ERROR_CODE_TYPES_ENUM: {
-		value: {
-			ARG: 'ARG',
-			PROPERTY: 'PROPERTY',
-			RETURN: 'RETURN'
-		},
-		properties: {
-			configurable: false,
-			writable: false
-		}
-	}
-} );*/
 
 // Exports
 

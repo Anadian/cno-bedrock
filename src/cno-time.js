@@ -223,12 +223,11 @@ Benchmark.prototype.getIntervals = function(){
 ##### `options` Properties
 | name | type | default | description |
 | --- | --- | --- | --- |
-| duration | number | Number.NaN | The duration; assumed to be in seconds unless `base` is specified. |
-| seconds_per_unit | number | 1 | The base of scale for `duration`; for example: `1` mean duration is specified in seconds, `0.001` means duration is in milliseconds, `60` means duration is in minutes. |
-| units_per_second | number | 1 | The inverse of `seconds_per_unit` which can also be used to derive `seconds_per_unit` via taking the reciprocal (1/`units_per_second`); ignored if `seconds_per_unit` is specified. |
-| units | string|boolean | "\u205f" | A string to place between a number and its unit or a non-truthy value to omit units entirely from the formatted string. |
-| separator | string|boolean | "\u2005" | A string to put between each order of magnitude or a non-truthy value to omit separation altogether. |
-| applied_units | object | { hours: 'h', minutes: 'min', seconds: 's' } | An object whose properties indicate which units should be included with the property value indicating a preferred unit symbol. See [MathJS](https://mathjs.org/docs/datatypes/units.html#reference) for available units. |
+| duration | number | Number.NaN | The duration; assumed to be in seconds unless 'duration_unit' is specified. |
+| unit_seperator | string|boolean | "\u205f" | A string to place between a number and its unit or a non-truthy value to omit units entirely from the formatted string. |
+| split_separator | string|boolean | "\u2005" | A string to put between each order of magnitude or a non-truthy value to omit separation altogether. |
+| duration_unit | object\|string | `MathJS.unit('s')` | A valid [MathJS unit object](https://mathjs.org/docs/datatypes/units.html#units) such as the one returned from the `unit` function, or a string to be passed to said function. | 
+| split_units | Array | `[ 'h', 'min', 's' ]` | An array to be passed to [`splitUnit`](https://mathjs.org/docs/datatypes/units.html#unitsplitunitparts). See [MathJS](https://mathjs.org/docs/datatypes/units.html#reference) for available units. |
 
 #### Returns
 | type | description |
@@ -249,11 +248,11 @@ function getStringFromDurationOptions( input_options = {} ){
 	const FUNCTION_NAME = 'getStringFromDurationOptions';
 	const DEFAULT_OPTIONS = {
 		duration: Number.NaN, // The duration; assumed to be in seconds unless `base` is specified.
-		seconds_per_unit: 1, // The base of scale for `duration`; for example: `1` mean duration is specified in seconds, `0.001` means duration is in milliseconds, `60` means duration is in minutes.
-		units_per_second: 1, // The inverse of `seconds_per_unit` which can also be used to derive `seconds_per_unit` via taking the reciprocal (1/`units_per_second`); ignored if `seconds_per_unit` is specified.
+		//seconds_per_unit: 1, // The base of scale for `duration`; for example: `1` mean duration is specified in seconds, `0.001` means duration is in milliseconds, `60` means duration is in minutes.
+		//units_per_second: 1, // The inverse of `seconds_per_unit` which can also be used to derive `seconds_per_unit` via taking the reciprocal (1/`units_per_second`); ignored if `seconds_per_unit` is specified.
 		unit_separator: "\u205f", // A string to place between a number and its unit or a non-truthy value to omit units entirely from the formatted string.
 		split_separator: "\u2005", // A string to put between each order of magnitude or a non-truthy value to omit separation altogether.
-		applied_units: { hours: 'h', minutes: 'min', seconds: 's' }, // An object whose properties indicate which units should be included with the property value indicating a preferred unit symbol. See [MathJS](https://mathjs.org/docs/datatypes/units.html#reference) for available units.
+		//applied_units: { hours: 'h', minutes: 'min', seconds: 's' }, // An object whose properties indicate which units should be included with the property value indicating a preferred unit symbol. See [MathJS](https://mathjs.org/docs/datatypes/units.html#reference) for available units.
 		duration_unit: MathJS.unit('s'),
 		split_units: [ 'h', 'min', 's' ]
 	};// Variables
@@ -270,11 +269,15 @@ function getStringFromDurationOptions( input_options = {} ){
 	// Options
 	var { logFunction: log_function = this?.logger?.log, validationFunction: validation_function, ...options } = deriveOptions( input_options, DEFAULT_OPTIONS, ( options ) => {
 		/* c8 ignore start */
-		if( !Number.isFinite( options.seconds_per_unit ) ){
+		/*if( !Number.isFinite( options.seconds_per_unit ) ){
 			if( Number.isFinite( options.units_per_second ) ){
 				options.seconds_per_unit = 1/options.units_per_second;
 			}
-		} /* c8 ignore stop */
+		}*/
+		if( typeof(options.duration_unit) === 'string' ){
+			options.duration_unit = MathJS.unit( options.duration_unit );
+		}
+		/* c8 ignore stop */
 		return options;
 	} );
 	if( validation_function( options ) === true ){

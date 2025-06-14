@@ -3,6 +3,9 @@
 [![Semantic Versioning 2.0.0](https://img.shields.io/badge/semver-2.0.0-brightgreen?style=flat-square)](https://semver.org/spec/v2.0.0.html)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 [![License](https://img.shields.io/github/license/Anadian/cno-bedrock)](https://github.com/Anadian/cno-bedrock/blob/main/LICENSE)
+[![ci](https://github.com/Anadian/cno-bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/Anadian/cno-bedrock/actions/workflows/ci.yml)
+[![NPM Version](https://img.shields.io/npm/v/cno-bedrock)](https://www.npmjs.com/package/cno-bedrock)
+[![Coverage Status](https://coveralls.io/repos/github/Anadian/cno-bedrock/badge.svg?branch=main)](https://coveralls.io/github/Anadian/cno-bedrock?branch=main)
 
 > Micropackage: a test bed for various small pieces of reusable code.
 # Table of Contents
@@ -25,7 +28,7 @@ import Namespace from 'cno-bedrock'; // Default export is a full "namespace".
 import { OneFunction } from 'cno-bedrock'; // To just export a single function.
 ```
 # API
-See [API.md](API.md) for full API. 
+See [docs directory](docs/src) for full API. 
 # Contributing
 Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 # License
