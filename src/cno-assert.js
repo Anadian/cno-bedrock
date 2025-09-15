@@ -245,7 +245,7 @@ function assertExpectedError( actual, expected, message = '' ){
 } // assertExpectedError
 /**
 ### assertObjectsQuantitativelyEqual
-> Throws if acutal doesn't have the same properties and values as expected. Compared via [lodash's `_.isEqual`](https://lodash.com/docs/4.17.15#isEqual).
+> Throws if actual doesn't have the same properties and values as expected. Compared via [lodash's `_.isEqual`](https://lodash.com/docs/4.17.15#isEqual).
 
 #### Parametres
 | name | type | description |
@@ -279,6 +279,40 @@ function assertObjectsQuantitativelyEqual( actual, expected, message = '' ){
 		throw return_error;
 	}
 } // assertObjectsQuantitativelyEqual
+/**
+### assertNullOrFunction
+> Throws if actual is neither `null` nor a function.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual object.  |
+| message | string | A custom message for the assertion. \[default: ''\] |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_NULLORFUNCTION' | AssertionError | Thrown if actual is neither `null` nor a function. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.1 | WIP |
+*/
+function assertNullOrFunction( actual, message = '' ){
+	// Constants
+	const FUNCTION_NAME = 'assertNullOrFunction';
+	// Variables
+	var return_error = null;
+	// Function
+	if( actual != null && typeof(actual) !== 'function' ){
+		message ??= `'actual' (${inspThis.call( actual )}) is neither null nor a function.`;
+		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'NullOrFunction' } );
+		return_error.code += '_NULLORFUNCTION';
+		annotateThis.call( return_error );
+		throw return_error;
+	}
+} // assertNullOrFunction
 
 const NAMESPACE = { ...AssertNS };
 Object.defineProperties( NAMESPACE, {
@@ -304,6 +338,10 @@ Object.defineProperties( NAMESPACE, {
 	},
 	assertObjectsQuantitativelyEqual: {
 		value: assertObjectsQuantitativelyEqual,
+		enumerable: true
+	},
+	assertNullOrFunction: {
+		value: assertNullOrFunction,
 		enumerable: true
 	}
 } );
