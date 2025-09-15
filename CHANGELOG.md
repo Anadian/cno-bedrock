@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/Anadian/cno-bedrock/compare/v0.0.1...v0.0.2) (2025-09-15)
+
+
+### Features
+
+* assertNullOrFunction ([8cc5955](https://github.com/Anadian/cno-bedrock/commit/8cc5955129b65affc65f3175d341a4238356930f))
+
 ### 0.0.1 (2025-06-14)
 
 
