@@ -156,13 +156,17 @@ function isNullOrEmpty( input_value ){
 	//var arguments_array = Array.from(arguments);
 	var _return = false;
 	var return_error = null;
-	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `received.`});
+	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `received: ${input_value}`});
 	// Parametre checks
 	try{
-		Assert.assertIsNullOrEmpty( input_Value );
+		this?.logger?.log( 'Begin try' );
+		Assert.assertIsNullOrEmpty( input_value );
 		_return = true;
+		this?.logger?.log( 'End try' );
 	} catch( error ){
+		this?.logger?.log( 'Begin catch: %o', error );
 		_return = false;
+		this?.logger?.log( 'End catch' );
 	}
 	// Return
 	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});

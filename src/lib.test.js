@@ -149,6 +149,49 @@ function main_test(){
 	} catch( error ){
 		Bedrock.assert.assertExpectedError( error, { constructor: TypeError, code: 'ERR_INVALID_ARG_TYPE' } );
 	}
+	// v0.0.3
+	Bedrock.assert.assertIsEmpty( [] );
+	try{
+		Bedrock.assert.assertIsEmpty( 'Not empty.' );
+	} catch( error ){
+		//console.log( error );
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_ISEMPTY' } );
+	}
+	Bedrock.assert.assertIsNullOrUndefined( null );
+	try{
+		Bedrock.assert.assertIsNullOrUndefined( 'Not empty.' );
+	} catch( error ){
+		//console.log( error );
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_ISNULLORUNDEFINED' } );
+	}
+	Bedrock.assert.assertIsNullOrEmpty( '' );
+	Bedrock.assert.assertIsNullOrEmpty( null );
+	try{
+		Bedrock.assert.assertIsNullOrEmpty( 'Not empty.' );
+	} catch( error ){
+		//console.log( error );
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_ISNULLOREMPTY' } );
+	}
+	try{
+		Bedrock.assert.assertIsNullOrEmpty( 1 );
+	} catch( error ){
+		//console.log( error );
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_ISNULLOREMPTY' } );
+	}
+	Bedrock.assert.assertNullOrFunction( Bedrock.noop.returnNull );
+	Bedrock.assert.assertNullOrFunction( null );
+	try{
+		Bedrock.assert.assertNullOrFunction( 1 );
+	} catch( error ){
+		console.log( error );
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_NULLORFUNCTION' } );
+	}
+	var e = Bedrock.isNullOrEmpty( '' );
+	var n = Bedrock.isNullOrEmpty( null );
+	var f = Bedrock.isNullOrEmpty( '0' );
+	if( e !== true || n !== true || f !== false ){
+		console.error( 'Something is wrong!', e, n, f );
+	}
 }
 main_test();
 

@@ -417,7 +417,7 @@ function assertNullOrFunction( actual ){
 	// Function
 	if( actual != null && typeof(actual) !== 'function' ){
 		message = `'actual' (${inspThis.call( actual )}) is neither null nor a function.`;
-		return_error = new AssertNS.AssertionError( { message: message, actual: actual, expected: expected, operator: 'NullOrFunction' } );
+		return_error = new AssertNS.AssertionError( { message: message, actual: actual, operator: 'NullOrFunction' } );
 		return_error.code += '_NULLORFUNCTION';
 		annotateThis.call( return_error );
 		throw return_error;
