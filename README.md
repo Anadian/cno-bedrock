@@ -19,7 +19,7 @@
 # Install
 Available on the [npm registry](https://www.npmjs.com/package/cno-bedrock) as `cno-bedrock`. Add it to a project using [pnpm](https://pnpm.io/cli/add):
 ```sh
-pnpm add --save cno-read-by-block
+pnpm add --save cno-bedrock
 ```
 It can, of course, also be installed by [npm](https://docs.npmjs.com/cli/v8/commands/npm-install) or [yarn](https://yarnpkg.com/getting-started/usage) using the normal methods.
 # Usage
