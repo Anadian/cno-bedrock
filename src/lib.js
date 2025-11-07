@@ -131,6 +131,43 @@ function isStrictlyNotEqual( input_options = {} ){
 	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});
 	return _return;
 } // isStrictlyNotEqual
+/**
+### isNullOrEmpty
+> Returns `true` if the a given `input_value` is either an empty string (`''`), `null`, or `undefined`.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| input_value | string|object | The value to check. |
+
+#### Returns
+| type | description |
+| --- | --- |
+| boolean | Returns `true` if `input_value` is an empty string, `null`, or `undefined`; `false` otherwise. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.3 | WIP |
+*/
+function isNullOrEmpty( input_value ){
+	const FUNCTION_NAME = 'isNullOrEmpty';
+	// Variables
+	//var arguments_array = Array.from(arguments);
+	var _return = false;
+	var return_error = null;
+	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `received.`});
+	// Parametre checks
+	try{
+		Assert.assertIsNullOrEmpty( input_Value );
+		_return = true;
+	} catch( error ){
+		_return = false;
+	}
+	// Return
+	this?.logger?.log({file: FILENAME, function: FUNCTION_NAME, level: 'debug', message: `returned: ${_return}`});
+	return _return;
+} // isNullOrEmpty
 
 // Exports
 
@@ -159,10 +196,14 @@ Object.defineProperties( NAMESPACE, {
 	isStrictlyNotEqual: {
 		value: isStrictlyNotEqual,
 		enumerable: true
+	},
+	isNullOrEmpty: {
+		value: isNullOrEmpty,
+		enumerable: true
 	}
 } );
 
-export { NAMESPACE as default, isStrictlyNotEqual };
+export { NAMESPACE as default, isStrictlyNotEqual, isNullOrEmpty };
 export * from './cno-time.js';
 export * from './cno-utility.js';
 export * from './cno-noop.js';
