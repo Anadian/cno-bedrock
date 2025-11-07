@@ -71,3 +71,22 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 | --- | --- |
 | 0.0.1 | WIP |
 
+
+### isNullOrEmpty
+> Returns `true` if the a given `input_value` is either an empty string (`''`), `null`, or `undefined`.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| input_value | string|object | The value to check. |
+
+#### Returns
+| type | description |
+| --- | --- |
+| boolean | Returns `true` if `input_value` is an empty string, `null`, or `undefined`; `false` otherwise. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.3 | WIP |
+

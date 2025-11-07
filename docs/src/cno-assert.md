@@ -36,7 +36,6 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 | --- | --- | --- |
 | actual | any | The actual value.  |
 | expected | any | The expected value.  |
-| message | string | A custom message for the assertion. \[default: ''\] |
 
 #### Throws
 | code | type | condition |
@@ -46,6 +45,7 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 #### History
 | version | change |
 | --- | --- |
+| 0.0.3 | Removed message parametre. |
 | 0.0.1 | WIP |
 
 
@@ -57,7 +57,6 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 | --- | --- | --- |
 | actual | any | The actual value.  |
 | expected | any | The expected value.  |
-| message, | string | A custom message for the assertion. \[default: ''\] |
 
 #### Throws
 | code | type | condition |
@@ -67,7 +66,65 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 #### History
 | version | change |
 | --- | --- |
+| 0.0.3 | Redone |
 | 0.0.1 | WIP |
+
+
+### assertIsEmpty
+> Throws if `actual` is not empty.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_ISEMPTY' | AssertionError | Thrown if `actual` is not empty. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.3 | WIP |
+
+
+### assertIsNullOrUndefined
+> Throws if `actual` is neither `null` nor `undefined`.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_ISNULLORUNDEFINED' | AssertionError | Thrown if `actual` is neither `null` nor `undefined`. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.3 | WIP |
+
+
+### assertIsNullOrEmpty
+> Throws if `actual` is neither an empty string, `null`, nor `undefined`.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual value.  |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_ISNULLOREMPTY' | AssertionError | Thrown if `actual` is neither an empty string, `null`, nor `undefined`. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.3 | WIP |
 
 
 ### assertStrictlyNotEqual
@@ -78,10 +135,9 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 | --- | --- | --- |
 | actual | any | The actual value.  |
 | expected | any | The expected/invalid value.  |
-| name | string | The name of variable as a string, for a more informative auto message. \[default: ''\] |
-| value | string | The expected value as a string, for a more informative auto message. \[default: ''\] |
-| expectedType | string | The expected's type as a string, for a more informative auto message. \[default: ''\] |
-| message | string | A custom message for the assertion. \[default: ''\] |
+| name | string | The name of variable as a string, for a more informative auto message. \[default: `null`\] |
+| value | string | The expected value as a string, for a more informative auto message. \[default: `null`\] |
+| expectedType | string | The expected's type as a string, for a more informative auto message. \[default: `null`\] |
 
 #### Throws
 | code | type | condition |
@@ -91,6 +147,7 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 #### History
 | version | change |
 | --- | --- |
+| 0.0.3 | Removed message parametre. |
 | 0.0.1 | WIP |
 
 
@@ -102,7 +159,6 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 | --- | --- | --- |
 | actual | any | The actual value.  |
 | expected | any | The expected value.  |
-| message | string | A custom message for the assertion. \[default: ''\] |
 
 #### Throws
 | code | type | condition |
@@ -112,6 +168,7 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 #### History
 | version | change |
 | --- | --- |
+| 0.0.3 | Removed message parametre. |
 | 0.0.1 | WIP |
 
 
@@ -123,7 +180,6 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 | --- | --- | --- |
 | actual | any | The actual error.  |
 | expected | any | An object with a the properties 'constructor' with the constructor function used to create the error and 'code' the expected code property of the error.  |
-| message | string | A custom message for the assertion. \[default: ''\] |
 
 #### Throws
 | code | type | condition |
@@ -137,14 +193,13 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 
 
 ### assertObjectsQuantitativelyEqual
-> Throws if acutal doesn't have the same properties and values as expected. Compared via [lodash's `_.isEqual`](https://lodash.com/docs/4.17.15#isEqual).
+> Throws if actual doesn't have the same properties and values as expected. Compared via [lodash's `_.isEqual`](https://lodash.com/docs/4.17.15#isEqual).
 
 #### Parametres
 | name | type | description |
 | --- | --- | --- |
 | actual | any | The actual object.  |
 | expected | any | The expected object.  |
-| message | string | A custom message for the assertion. \[default: ''\] |
 
 #### Throws
 | code | type | condition |
@@ -154,5 +209,26 @@ Documentation License: [![Creative Commons License](https://i.creativecommons.or
 #### History
 | version | change |
 | --- | --- |
+| 0.0.3 | Removed message parametre. |
+| 0.0.1 | WIP |
+
+
+### assertNullOrFunction
+> Throws if actual is neither `null` nor a function.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual object.  |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_NULLORFUNCTION' | AssertionError | Thrown if actual is neither `null` nor a function. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.3 | Removed message parametre. |
 | 0.0.1 | WIP |
 
