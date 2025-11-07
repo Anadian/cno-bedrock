@@ -183,7 +183,7 @@ function main_test(){
 	try{
 		Bedrock.assert.assertNullOrFunction( 1 );
 	} catch( error ){
-		console.log( error );
+		//console.log( error );
 		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_NULLORFUNCTION' } );
 	}
 	var e = Bedrock.isNullOrEmpty( '' );
