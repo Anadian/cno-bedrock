@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/Anadian/cno-bedrock/compare/v0.0.2...v0.0.3) (2025-11-07)
+
+
+### Features
+
+* Improved asserts. ([cf088d7](https://github.com/Anadian/cno-bedrock/commit/cf088d7edc21fe04a02a66d12ab7aaeed259fe3a))
+
+
+### Continuous Integration
+
+* Added new tests and coverage. ([3b95166](https://github.com/Anadian/cno-bedrock/commit/3b95166a247af1fcd1ae5734423abd8ad432fbfe))
+
+
+### Documentation
+
+* Fixed README ([dcb0971](https://github.com/Anadian/cno-bedrock/commit/dcb09711b1c6b6d08350ebd3a8c360712251c302))
+* Updated for v0.0.3 ([1f99373](https://github.com/Anadian/cno-bedrock/commit/1f99373f51395c65aa65b632e22eb770e7b629de))
+
+
+### Chores
+
+* Updated deps. ([5769701](https://github.com/Anadian/cno-bedrock/commit/57697015fec19b5b667faf43497bd949afa17af2))
+
 ### [0.0.2](https://github.com/Anadian/cno-bedrock/compare/v0.0.1...v0.0.2) (2025-09-15)
 
 
