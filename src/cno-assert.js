@@ -423,6 +423,40 @@ function assertNullOrFunction( actual ){
 		throw return_error;
 	}
 } // assertNullOrFunction
+/**
+### assertIsMap
+> Throws if actual is neither `null` nor a function.
+
+#### Parametres
+| name | type | description |
+| --- | --- | --- |
+| actual | any | The actual object.  |
+
+#### Throws
+| code | type | condition |
+| --- | --- | --- |
+| 'ERR_ASSERTION_NULLORFUNCTION' | AssertionError | Thrown if actual is neither `null` nor a function. |
+
+#### History
+| version | change |
+| --- | --- |
+| 0.0.5 | WIP |
+*/
+function assertIsMap( actual ){
+	// Constants
+	const FUNCTION_NAME = 'assertIsMap';
+	// Variables
+	var return_error = null;
+	var message = '';
+	// Function
+	if( _.isMap( actual ) !== true ){
+		message = `'actual' (${inspThis.call( actual )}) is not a Map.`;
+		return_error = new AssertNS.AssertionError( { message: message, actual: actual, operator: 'IsMap' } );
+		return_error.code += '_ISMAP';
+		annotateThis.call( return_error );
+		throw return_error;
+	}
+} // assertIsMap
 
 const NAMESPACE = { ...AssertNS };
 Object.defineProperties( NAMESPACE, {
@@ -464,6 +498,10 @@ Object.defineProperties( NAMESPACE, {
 	},
 	assertNullOrFunction: {
 		value: assertNullOrFunction,
+		enumerable: true
+	},
+	assertIsMap: {
+		value: assertIsMap,
 		enumerable: true
 	}
 } );
