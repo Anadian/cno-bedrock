@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/Anadian/cno-bedrock/compare/v0.0.4...v0.0.5) (2025-11-08)
+
+
+### Features
+
+* **assert:** Add assertIsMap. ([9bc952b](https://github.com/Anadian/cno-bedrock/commit/9bc952b1b82580a496bab38f44e6514547614cb8))
+
+
+### Tests
+
+* Added test for assertIsMap. ([af82fb3](https://github.com/Anadian/cno-bedrock/commit/af82fb3831a96afd64c241db7ea894b2d20a48d2))
+
 ### [0.0.4](https://github.com/Anadian/cno-bedrock/compare/v0.0.3...v0.0.4) (2025-11-07)
 
 
