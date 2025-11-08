@@ -192,6 +192,17 @@ function main_test(){
 	if( e !== true || n !== true || f !== false ){
 		console.error( 'Something is wrong!', e, n, f );
 	}
+	var map = new Map();
+	var maplike = {
+		a: 'b',
+		size: 1
+	};
+	Bedrock.assert.assertIsMap( map );
+	try{
+		Bedrock.assert.assertIsMap( maplike );
+	} catch( error ){
+		Bedrock.assert.assertExpectedError( error, { constructor: AssertionError, code: 'ERR_ASSERTION_ISMAP' } );
+	}
 }
 main_test();
 
